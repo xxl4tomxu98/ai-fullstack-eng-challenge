@@ -1,4 +1,4 @@
-ResoluteAI Fullstack Challenge
+AI Fullstack Challenge
 =========================
 
 Welcome to your challenge project!
