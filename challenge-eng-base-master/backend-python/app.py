@@ -16,8 +16,10 @@ def test():
     with db.cursor() as cur:
         cur.execute("SELECT title, genres FROM movies;")
         movies = cur.fetchall()[:10]
-        return flask.jsonify([dict(title=movie[0], genres=genres_array(movie[1]),
-                                   released=release_year(movie[0])) for movie in movies])
+        data = [dict(title=movie[0], genres=genres_array(movie[1]),
+                                   released=release_year(movie[0]))
+                                   for movie in movies]
+        return flask.jsonify(data)
 
 
 @app.cli.command("load-movielens")
