@@ -40,21 +40,13 @@ const App = () => {
 
 
     return (
-      <div>
-        <h1>Hello</h1>
-        <pre>state = {JSON.stringify(movies, undefined, '  ')}</pre>
-      </div>
+        <div>
+          <h1>Hello, This Full Stack AI Challenge.</h1>
+          <pre>state = {JSON.stringify(movies, undefined, '  ')}</pre>
+        </div>
     );
 
-  // componentDidMount() {
-  //   fetch('/test').then((res) => {
-  //     return res.json();
-  //   }).then((res) => {
-  //     this.setState({res});
-  //   }).catch((err) => {
-  //     this.setState({err});
-  //   });
-  // }
+
 }
 
 export default App;
