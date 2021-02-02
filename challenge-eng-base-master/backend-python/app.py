@@ -29,8 +29,8 @@ def load_movielens():
 
 
 def genres_array(str):
-    if '|' not in str:
-        return list(str)
+    if str.find('|') == -1:
+        return [str]
     return str.split('|')
 
 
