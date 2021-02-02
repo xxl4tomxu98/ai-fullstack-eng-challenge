@@ -40,7 +40,7 @@ const App = () => {
     }
 
     const handleClick = (e) => {
-      setCurrentPage(Number(e.target.id));
+        setCurrentPage(Number(e.target.innerHTML));
     }
 
     useEffect(() => {
@@ -58,27 +58,25 @@ const App = () => {
 
 
     return (
-        <div>
+        <div className="App">
           <h1>Hello, This Full Stack AI Challenge.</h1>
 
           <div>
-              <ul>
-                  {currentMovies.map((movie, index) => (
-                      <li key={index}>{movie.title}</li>
-                  ))};
-              </ul>
-              <ul id="page-numbers">
-                  {pageNumbers.map(number => {
-                      return (
-                        <li
-                          key={number}
-                          id={number}
-                          onClick={handleClick}
-                        >
-                          {number}
-                        </li>
-                        );
-                  })};
+
+              <div className="pagination">
+                  {pageNumbers.fill().map((number, index) =>   {
+                    return (
+                      <button data-testid="page-button" key={"page-button-" + index} onClick={handleClick}>{index+1}</button>
+                    )
+                  })}
+              </div>
+
+              <ul className="results">
+                  {currentMovies.map((movie, index) => {
+                    return (
+                      <li key={"title-" + index} data-testid="result-row">{movie.title}</li>
+                    )
+                  })}
               </ul>
           </div>
 

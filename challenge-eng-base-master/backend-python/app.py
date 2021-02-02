@@ -15,7 +15,7 @@ db = pymysql.connect(
 def test():
     with db.cursor() as cur:
         cur.execute("SELECT title, genres FROM movies;")
-        movies = cur.fetchall()[:10]
+        movies = cur.fetchall()[:20]
         data = [dict(title=movie[0], genres=genres_array(movie[1]),
                                    released=release_year(movie[0]))
                                    for movie in movies]
