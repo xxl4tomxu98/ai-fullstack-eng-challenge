@@ -14,9 +14,9 @@ db = pymysql.connect(
 @app.route("/test")
 def test():
     with db.cursor() as cur:
-        cur.execute("SELECT col FROM test;")
-        (result,) = cur.fetchone()
-        return flask.jsonify(dict(result=result, backend="python"))
+        cur.execute("SELECT title, genres FROM movies;")
+        movies = cur.fetchall()[:10]
+        return flask.jsonify([dict(title=movie[0], genres=movie[1], backend="python") for movie in movies])
 
 
 @app.cli.command("load-movielens")

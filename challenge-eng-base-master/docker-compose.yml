@@ -9,7 +9,7 @@ services:
     volumes:
       - devmysqldb:/var/lib/mysql
       - ./db/sql:/docker-entrypoint-initdb.d
-    
+
   backend:
     build: backend-python
     depends_on:
@@ -21,7 +21,7 @@ services:
     tty: true
     ports:
       - "8080:80"
-    
+
   site:
     build: frontend-react
     restart: always
@@ -32,5 +32,5 @@ services:
     ports:
       - "8090:80"
 
-volumes:  
+volumes:
   devmysqldb:
