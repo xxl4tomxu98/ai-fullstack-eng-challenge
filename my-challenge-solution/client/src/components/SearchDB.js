@@ -23,23 +23,35 @@ class SearchDB extends React.Component {
     });
   }
 
-  fetchMovies = async () => {
+  // fetchMovies = async () => {
+  //   const response = await fetch('/movies');
+  //   const { list } = await response.json();
+  //   console.log(list)
+  //   this.setState({
+  //     movieData: list,
+  //   })
+  // }
 
-    const response = await fetch('/movies');
-    const { list } = await response.json();
-    console.log(list)
-    this.setState({
-      movieData: list,
-      currentPage: 1,
-    })
+  searchMovies = async () => {
+    const term = this.state.term;
+    const res = await fetch(`/search/${term}`)
+    if (res.ok) {
+        const { list } = await res.json();
+        console.log(list)
+        this.setState({
+          movieData: list,
+        })
+        return list;
+    }
+    throw res;
   }
 
   render() {
     const { movieData, currentPage } = this.state;
     // sort searched movies by release_year desc
     movieData.sort(function(a, b) {
-      const keyA = a.released;
-      const keyB = b.released;
+      const keyA = a.release_year;
+      const keyB = b.release_year;
       if (keyA > keyB) return -1;
       if (keyA < keyB) return 1;
       return 0;
@@ -56,6 +68,7 @@ class SearchDB extends React.Component {
     }
     return (
       <React.Fragment>
+          <h1>Hello, My Movielens Challenge.</h1>
           <div className="controls">
               <input type="text" className="filter-input" data-testid="candidate-id"
                   onChange={this.updateTerm}/>
@@ -63,7 +76,7 @@ class SearchDB extends React.Component {
 
           <button onClick={(e) => {
                   e.preventDefault();
-                  this.fetchMovies();
+                  this.searchMovies();
               }}> Search Movies
           </button>
           <div className="pagination">

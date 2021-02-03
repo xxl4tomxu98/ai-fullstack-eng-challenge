@@ -35,12 +35,12 @@ def hello():
 def search(term):
     #key = request.get_json()["term"]
     # search if term in title or genres of movies
-    #search_args = [Movie.title.ilike('%%%s%%' % term)]
+    search_args = [col.ilike('%%%s%%' % term) for col in
+                   [Movie.title, Movie.genres]]
 
-    movies = Movie.query.filter(Movie.title.ilike('%%%s%%' % term)
-                    ).all()
+    movies = Movie.query.filter(or_(*search_args)).all()
     print(movies)
-    return {'movies': [movie.to_dict() for movie in movies]}
+    return {'list': [movie.to_dict() for movie in movies]}
 
 
 @app.route('/movies')
