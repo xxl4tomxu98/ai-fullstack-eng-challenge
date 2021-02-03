@@ -4,17 +4,12 @@ body {
   font-family: sans-serif;
 }
 
+
 pre {
   padding: 1em;
   background-color: #ccc;
 }
 
-
-.App {
-  max-width: 600px;
-  margin: 0 auto;
-  margin-top: 50px;
-}
 
 .pagination {
 

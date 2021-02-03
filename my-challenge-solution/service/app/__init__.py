@@ -59,3 +59,9 @@ def get_tags():
 def get_ratings():
     response = Rating.query.all()[:10]
     return {'list': [rate.to_dict() for rate in response]}
+
+
+@app.route('/links')
+def get_links():
+    response = Link.query.all()[:10]
+    return {'list': [link.to_dict() for link in response]}

@@ -3,6 +3,7 @@ import flask.json, decimal
 db = SQLAlchemy()
 
 
+# This is flask json encoding for jsonify Numeric object like rating
 class MyJSONEncoder(flask.json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, decimal.Decimal):
@@ -85,6 +86,13 @@ class Link(db.Model):
     imdb_id = db.Column(db.Integer, nullable=False)
     tmdb_id = db.Column(db.Integer, nullable=False)
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "movie_id": self.movie_id,
+            "imdb_id": self.imdb_id,
+            "tmdb_id": self.tmdb_id,
+        }
 
 def decimal_default(obj):
     if isinstance(obj, decimal.Decimal):
