@@ -4,10 +4,10 @@ import SearchDB from './components/SearchDB';
 
 class App extends Component {
   render() {
-    const { candidates } = this.props;
+
     return (
       <div className="App">
-          <SearchDB candidates={candidates}/>
+          <SearchDB />
       </div>
     );
   }
