@@ -37,9 +37,8 @@ def search(term):
     # search if term in title or genres of movies
     search_args = [col.ilike('%%%s%%' % term) for col in
                    [Movie.title, Movie.genres]]
-
     movies = Movie.query.filter(or_(*search_args)).all()
-    print(movies)
+
     return {'list': [movie.to_dict() for movie in movies]}
 
 

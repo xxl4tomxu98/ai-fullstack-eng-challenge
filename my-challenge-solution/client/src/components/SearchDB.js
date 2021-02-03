@@ -50,14 +50,14 @@ class SearchDB extends React.Component {
     const { movieData, currentPage } = this.state;
     // sort searched movies by release_year desc
     movieData.sort(function(a, b) {
-      const keyA = a.release_year;
-      const keyB = b.release_year;
+      const keyA = parseInt(a.release_year, 10);
+      const keyB = parseInt(b.release_year, 10);
       if (keyA > keyB) return -1;
       if (keyA < keyB) return 1;
       return 0;
     });
     // Logic for displaying pagination
-    const perPage = 5;
+    const perPage = 3;
     const indexOfLastPage = currentPage * perPage;
     const indexOfFirstPage = indexOfLastPage - perPage;
     const currentMovies = movieData.slice(indexOfFirstPage, indexOfLastPage);
@@ -89,7 +89,12 @@ class SearchDB extends React.Component {
           <ul className="results">
               {currentMovies.map((movie, index) => {
                 return (
-                  <li key={"title-" + index} data-testid="result-row">{movie.title} {movie.genres}</li>
+                  <div data-testid="result-row" key={"result-" + index}>
+                      <h3>{movie.title}</h3>
+                      <li>Genres: {movie.genres}</li>
+                      <li>Num_of_Tags: {movie.tag_count}       Tags: {movie.all_tags}</li>
+                      <li>Num_of_Ratings: {movie.rating_count}    Average Rating: {movie.avg_rating}</li>
+                  </div>
                 )
               })}
           </ul>

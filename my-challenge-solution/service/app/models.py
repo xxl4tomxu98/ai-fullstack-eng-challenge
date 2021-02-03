@@ -23,14 +23,35 @@ class Movie(db.Model):
     links = db.relationship("Link", backref='movie', lazy=True)
 
     @property
+    def tag_count(self):
+        return len(self.tags)
+
+    @property
+    def rating_count(self):
+        return len(self.ratings)
+
+    @property
     def genres_array(self):
         if '|' not in self.genres:
-            return list(self.genres)
+            return [self.genres]
         return self.genres.split('|')
 
     @property
     def release_year(self):
-        return int(self.title[-5:-1])
+        return self.title[-5:-1]
+
+    @property
+    def avg_rating(self):
+        ratings = Rating.query.filter_by(movie_id=self.movie_id).all()
+        all_ratings = [r.rating for r in ratings]
+        if len(all_ratings) != 0:
+            return "{:2.1f}".format(sum(all_ratings)/len(all_ratings))
+        return 0
+
+    @property
+    def all_tags(self):
+        tags = Tag.query.filter_by(movie_id=self.movie_id).all()
+        return [t.tag for t in tags]
 
     def to_dict(self):
         return {
@@ -38,6 +59,10 @@ class Movie(db.Model):
             "title": self.title,
             "genres": self.genres_array,
             "release_year": self.release_year,
+            "tag_count": self.tag_count,
+            "all_tags": self.all_tags,
+            "rating_count": self.rating_count,
+            "avg_rating": self.avg_rating,
         }
 
 
