@@ -1,5 +1,10 @@
 import React from 'react';
 
+const divStyle = {
+  display: 'flex',
+  alignItems: 'center'
+};
+
 class SearchDB extends React.Component {
   constructor(props) {
     super(props);
@@ -89,29 +94,28 @@ class SearchDB extends React.Component {
     }
     return (
       <React.Fragment>
-          <h1>Hello, My Movielens Challenge.</h1>
-          <div className="controls">
-              <input type="text" className="filter-input" data-testid="term-id"
-                  onChange={this.updateTerm}/>
+          <h2>Hello, My Movielens Challenge.</h2>
+          <div style={divStyle}>
+              <div>
+                  <input type="text" className="filter-input" data-testid="term-id"
+                      onChange={this.updateTerm}/>
+                  <button onClick={(e) => {
+                          e.preventDefault();
+                          this.searchMovies();
+                      }}> By Title, Genres, or Movie_Id
+                  </button>
+              </div>
+
+              <div>
+                  <input type="text" className="filter-input" data-testid="tagTerm-id"
+                      onChange={this.updateTagTerm}/>
+                  <button onClick={(e) => {
+                          e.preventDefault();
+                          this.searchMoviesByTag();
+                      }}> By Tag Content
+                  </button>
+              </div>
           </div>
-
-          <button onClick={(e) => {
-                  e.preventDefault();
-                  this.searchMovies();
-              }}> Search by Title, Genres, or Movie_Id
-          </button>
-
-          <div className="controls">
-              <input type="text" className="filter-input" data-testid="tagTerm-id"
-                  onChange={this.updateTagTerm}/>
-          </div>
-
-          <button onClick={(e) => {
-                  e.preventDefault();
-                  this.searchMoviesByTag();
-              }}> Search by Tag Content
-          </button>
-
           <div className="pagination">
               {pageNumbers.fill().map((number, index) =>   {
                 return (
