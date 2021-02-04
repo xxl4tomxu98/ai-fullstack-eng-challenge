@@ -77,7 +77,7 @@ class SearchDB extends React.Component {
           <button onClick={(e) => {
                   e.preventDefault();
                   this.searchMovies();
-              }}> Search Movies
+              }}> Search by Title, Genres, or Movie_Id
           </button>
           <div className="pagination">
               {pageNumbers.fill().map((number, index) =>   {
@@ -91,8 +91,8 @@ class SearchDB extends React.Component {
                 return (
                   <div data-testid="result-row" key={"result-" + index}>
                       <a href={`https://movielens.org/movies/${movie.movie_id}`}>{movie.title}</a><a href={`http://www.imdb.com/title/${movie.imdb_tmdb[0]}`} style={{paddingLeft: '4px'}}>imdb</a><a href={`https://www.themoviedb.org/movie/${movie.imdb_tmdb[1]}`} style={{paddingLeft: '4px'}}>tmdb</a>
-                      <li>Genres: {movie.genres}</li>
-                      <li>Num_of_Tags: {movie.tag_count}       Tags: {movie.all_tags}</li>
+                      <li>Genres: {movie.genres.join(" | ")}</li>
+                      <li>Num_of_Tags: {movie.tag_count}       Tags: {movie.all_tags.join(' | ')}</li>
                       <li>Num_of_Ratings: {movie.rating_count}    Average Rating: {movie.avg_rating}</li>
                   </div>
                 )

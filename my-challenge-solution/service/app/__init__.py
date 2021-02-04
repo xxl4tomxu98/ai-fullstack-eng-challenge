@@ -1,8 +1,8 @@
 from flask import Flask, jsonify
 from .models import db, Movie, Tag, Rating, Link, MyJSONEncoder
 from os import environ
-from sqlalchemy import or_
-
+from sqlalchemy import or_, String
+from sqlalchemy.sql.expression import cast
 # use config class to connect sqlAlchemy to postgresql database
 class Config:
     SQLALCHEMY_DATABASE_URI = environ.get("DATABASE_URL") or \
@@ -30,13 +30,14 @@ def hello():
     return "Hello World!"
 
 
-# Route endpoint for frontend React to call
+# This is a multi-purpose search engine that can return
+# movies based on match on title, genres, or movie_id(return one)
 @app.route('/search/<term>')
 def search(term):
     #key = request.get_json()["term"]
     # search if term in title or genres of movies
     search_args = [col.ilike('%%%s%%' % term) for col in
-                   [Movie.title, Movie.genres]]
+                   [Movie.title, Movie.genres, cast(Movie.movie_id, String)]]
     movies = Movie.query.filter(or_(*search_args)).all()
 
     return {'list': [movie.to_dict() for movie in movies]}
@@ -64,3 +65,9 @@ def get_ratings():
 def get_links():
     response = Link.query.all()[:10]
     return {'list': [link.to_dict() for link in response]}
+
+
+@app.route('/movies/<id>')
+def get_movie_from_id(id):
+    movie = Movie.query.filter_by(movie_id=id).first()
+    return movie

@@ -12,6 +12,16 @@ class MyJSONEncoder(flask.json.JSONEncoder):
         return super(MyJSONEncoder, self).default(obj)
 
 
+movies_tags = db.Table(
+    'movies_tags',
+    db.Model.metadata,
+    db.Column(
+        'tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True
+    ), db.Column('movie_id', db.Integer,
+                 db.ForeignKey('movies.id'), primary_key=True)
+)
+
+
 class Movie(db.Model):
     __tablename__ = 'movies'
 
@@ -21,7 +31,8 @@ class Movie(db.Model):
     ratings = db.relationship("Rating", backref='movie', lazy=True)
     tags = db.relationship("Tag", backref='movie', lazy=True)
     links = db.relationship("Link", backref='movie', lazy=True)
-
+    movie_tags = db.relationship('Tag', back_populates='tagged_movies',
+                                    secondary='movies_tags')
     @property
     def tag_count(self):
         return len(self.tags)
@@ -53,6 +64,11 @@ class Movie(db.Model):
         tags = Tag.query.filter_by(movie_id=self.movie_id).all()
         return [t.tag for t in tags]
 
+    @property
+    def imdb_tmdb(self):
+        movie = Link.query.filter_by(movie_id=self.movie_id).first()
+        return (movie.imdb_id, movie.tmdb_id)
+
     def to_dict(self):
         return {
             "movie_id": self.movie_id,
@@ -63,6 +79,7 @@ class Movie(db.Model):
             "all_tags": self.all_tags,
             "rating_count": self.rating_count,
             "avg_rating": self.avg_rating,
+            "imdb_tmdb": self.imdb_tmdb,
         }
 
 
@@ -93,6 +110,13 @@ class Tag(db.Model):
     movie_id = db.Column(db.Integer, db.ForeignKey('movies.movie_id'), nullable=False)
     tag = db.Column(db.String(255))
     timestamp = db.Column(db.Integer)
+    tagged_movies = db.relationship('Movie',
+                                       back_populates='movie_tags',
+                                       secondary='movies_tags')
+
+    @property
+    def tagged_movie_count(self):
+        return len(self.tagged_movies)
 
     def to_dict(self):
         return {
@@ -100,6 +124,7 @@ class Tag(db.Model):
             "user_id": self.user_id,
             "movie_id": self.movie_id,
             "tag": self.tag,
+            "tagged_movies": self.tagged_movie_count,
             "timestamp": self.timestamp,
         }
 
