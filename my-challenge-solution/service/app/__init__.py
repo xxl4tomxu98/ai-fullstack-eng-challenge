@@ -3,6 +3,7 @@ from .models import db, Movie, Tag, Rating, Link, MyJSONEncoder
 from os import environ
 from sqlalchemy import or_, String
 from sqlalchemy.sql.expression import cast
+
 # use config class to connect sqlAlchemy to postgresql database
 class Config:
     SQLALCHEMY_DATABASE_URI = environ.get("DATABASE_URL") or \
@@ -13,6 +14,10 @@ class Config:
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
+
+with app.app_context():
+    db.create_all()
+
 app.json_encoder = MyJSONEncoder
 
 @app.route('/', defaults={'path': ''})
@@ -70,4 +75,18 @@ def get_links():
 @app.route('/movies/<id>')
 def get_movie_from_id(id):
     movie = Movie.query.filter_by(movie_id=id).first()
-    return movie
+    return {'movie_by_id': movie.to_dict()}
+
+
+@app.route('/search/movies/<tag_content>')
+def get_tagged_movies(tag_content):
+    search_args = [col.ilike('%%%s%%' % tag_content) for col in
+                    [Tag.tag]]
+    tags = Tag.query.filter(or_(*search_args)).all()
+    response = [tag.movie_id for tag in tags]
+    all_movies = Movie.query.all()
+    results = []
+    for movie in all_movies:
+        if movie.movie_id in response:
+            results.append(movie)
+    return {'results': [film.to_dict() for film in results]}

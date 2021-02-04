@@ -3,6 +3,16 @@ import flask.json, decimal
 db = SQLAlchemy()
 
 
+movies_tags = db.Table(
+    'movies_tags',
+    db.Model.metadata,
+    db.Column(
+        'tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True
+    ), db.Column('movie_id', db.Integer,
+                 db.ForeignKey('movies.movie_id'), primary_key=True)
+)
+
+
 # This is flask json encoding for jsonify Numeric object like rating
 class MyJSONEncoder(flask.json.JSONEncoder):
     def default(self, obj):
@@ -10,16 +20,6 @@ class MyJSONEncoder(flask.json.JSONEncoder):
             # Convert decimal instances to strings.
             return str(obj)
         return super(MyJSONEncoder, self).default(obj)
-
-
-movies_tags = db.Table(
-    'movies_tags',
-    db.Model.metadata,
-    db.Column(
-        'tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True
-    ), db.Column('movie_id', db.Integer,
-                 db.ForeignKey('movies.id'), primary_key=True)
-)
 
 
 class Movie(db.Model):

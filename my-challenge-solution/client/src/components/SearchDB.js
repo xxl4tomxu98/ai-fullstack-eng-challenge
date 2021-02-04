@@ -7,6 +7,7 @@ class SearchDB extends React.Component {
       movieData: [],
       currentPage: 1,
       term: 'movie',
+      tag_content: '',
     };
 
   }
@@ -14,6 +15,12 @@ class SearchDB extends React.Component {
   updateTerm = (e) => {
     this.setState({
       term: e.target.value,
+    })
+  }
+
+  updateTagTerm = (e) => {
+    this.setState({
+      tag_content: e.target.value,
     })
   }
 
@@ -46,6 +53,20 @@ class SearchDB extends React.Component {
     throw res;
   }
 
+  searchMoviesByTag = async () => {
+    const term = this.state.tag_content;
+    const res = await fetch(`/search/movies/${term}`)
+    if (res.ok) {
+        const { results } = await res.json();
+        console.log(results)
+        this.setState({
+          movieData: results,
+        })
+        return results;
+    }
+    throw res;
+  }
+
   render() {
     const { movieData, currentPage } = this.state;
     // sort searched movies by release_year desc
@@ -70,7 +91,7 @@ class SearchDB extends React.Component {
       <React.Fragment>
           <h1>Hello, My Movielens Challenge.</h1>
           <div className="controls">
-              <input type="text" className="filter-input" data-testid="candidate-id"
+              <input type="text" className="filter-input" data-testid="term-id"
                   onChange={this.updateTerm}/>
           </div>
 
@@ -79,6 +100,18 @@ class SearchDB extends React.Component {
                   this.searchMovies();
               }}> Search by Title, Genres, or Movie_Id
           </button>
+
+          <div className="controls">
+              <input type="text" className="filter-input" data-testid="tagTerm-id"
+                  onChange={this.updateTagTerm}/>
+          </div>
+
+          <button onClick={(e) => {
+                  e.preventDefault();
+                  this.searchMoviesByTag();
+              }}> Search by Tag Content
+          </button>
+
           <div className="pagination">
               {pageNumbers.fill().map((number, index) =>   {
                 return (
