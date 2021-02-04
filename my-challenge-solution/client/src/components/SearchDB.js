@@ -13,6 +13,8 @@ class SearchDB extends React.Component {
       currentPage: 1,
       term: 'movie',
       tag_content: '',
+      rating_limit: 0,
+      user_id: 1,
     };
 
   }
@@ -26,6 +28,18 @@ class SearchDB extends React.Component {
   updateTagTerm = (e) => {
     this.setState({
       tag_content: e.target.value,
+    })
+  }
+
+  updateRatingLimit = (e) => {
+    this.setState({
+      rating_limit: e.target.value,
+    })
+  }
+
+  updateUserId = (e) => {
+    this.setState({
+      user_id: e.target.value,
     })
   }
 
@@ -60,7 +74,35 @@ class SearchDB extends React.Component {
 
   searchMoviesByTag = async () => {
     const term = this.state.tag_content;
-    const res = await fetch(`/search/movies/${term}`)
+    const res = await fetch(`/search/tags/${term}`)
+    if (res.ok) {
+        const { results } = await res.json();
+        console.log(results)
+        this.setState({
+          movieData: results,
+        })
+        return results;
+    }
+    throw res;
+  }
+
+  searchMoviesByRating = async () => {
+    const term = this.state.rating_limit;
+    const res = await fetch(`/search/ratings/${term}`)
+    if (res.ok) {
+        const { results } = await res.json();
+        console.log(results)
+        this.setState({
+          movieData: results,
+        })
+        return results;
+    }
+    throw res;
+  }
+
+  searchMoviesByUserId = async () => {
+    const term = this.state.user_id;
+    const res = await fetch(`/search/users/${term}`)
     if (res.ok) {
         const { results } = await res.json();
         console.log(results)
@@ -102,7 +144,7 @@ class SearchDB extends React.Component {
                   <button onClick={(e) => {
                           e.preventDefault();
                           this.searchMovies();
-                      }}> By Title, Genres, or Movie_Id
+                      }}> Title, Genres, Movie_Id
                   </button>
               </div>
 
@@ -112,9 +154,30 @@ class SearchDB extends React.Component {
                   <button onClick={(e) => {
                           e.preventDefault();
                           this.searchMoviesByTag();
-                      }}> By Tag Content
+                      }}> Tag Content
                   </button>
               </div>
+
+              <div>
+                  <input type="text" className="filter-input" data-testid="ratingTerm-id"
+                      onChange={this.updateRatingLimit}/>
+                  <button onClick={(e) => {
+                          e.preventDefault();
+                          this.searchMoviesByRating();
+                      }}> Minimum Rating (float)
+                  </button>
+              </div>
+
+              <div>
+                  <input type="text" className="filter-input" data-testid="userTerm-id"
+                      onChange={this.updateUserId}/>
+                  <button onClick={(e) => {
+                          e.preventDefault();
+                          this.searchMoviesByUserId();
+                      }}> Rated/Tagged User
+                  </button>
+              </div>
+
           </div>
           <div className="pagination">
               {pageNumbers.fill().map((number, index) =>   {
@@ -123,12 +186,13 @@ class SearchDB extends React.Component {
                 )
               })}
           </div>
+
           <ul className="results">
               {currentMovies.map((movie, index) => {
                 return (
                   <div data-testid="result-row" key={"result-" + index}>
                       <a href={`https://movielens.org/movies/${movie.movie_id}`}>{movie.title}</a><a href={`http://www.imdb.com/title/${movie.imdb_tmdb[0]}`} style={{paddingLeft: '4px'}}>imdb</a><a href={`https://www.themoviedb.org/movie/${movie.imdb_tmdb[1]}`} style={{paddingLeft: '4px'}}>tmdb</a>
-                      <li>Genres: {movie.genres.join(" | ")}</li>
+                      <li>Id: {movie.movie_id}    Genres: {movie.genres.join(" | ")}</li>
                       <li>Num_of_Tags: {movie.tag_count}       Tags: {movie.all_tags.join(' | ')}</li>
                       <li>Num_of_Ratings: {movie.rating_count}    Average Rating: {movie.avg_rating}</li>
                   </div>
