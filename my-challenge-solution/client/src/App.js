@@ -4,7 +4,7 @@ import SearchDB from './components/SearchDB';
 
 class App extends Component {
   render() {
-    const term = '4000';
+    const { term } = this.props;
     return (
       <div className="App">
           <SearchDB term={term}/>

@@ -114,28 +114,40 @@ class SearchDB extends React.Component {
     throw res;
   }
 
-  getMoviesTest = async () => {
-    // This term is from props in from App() for testing
-    const { term } = this.props;
-    const res = await fetch(`/search/${term}`)
-    if (res.ok) {
-        const { list } = await res.json();
-        console.log(list)
-        this.setState({
-          movieData: list,
-        })
-        return list;
-    }
-    throw res;
+
+
+  fetchMoviesTest = async (term) => {
+      // This term is from props in from App() for testing
+      const res = await fetch(`/search/${term}`)
+      if (res.ok) {
+          const { list } = await res.json();
+          console.log(list)
+          this.setState({
+            movieData: list,
+          })
+          return list;
+      }
+      throw res;
   }
 
   componentDidMount() {
-    this.getMoviesTest();
+      const {term} = this.props;
+      this.fetchMoviesTest(term);
+  }
+
+  componentDidUpdate(oldProps) {
+      const oldTerm = oldProps.term;
+      const newTerm = this.props.term;
+      console.log(oldTerm, newTerm)
+      if (oldTerm === newTerm) {
+        return;
+      }
+      this.fetchMoviesTest(newTerm);
   }
 
   render() {
     const { movieData, currentPage } = this.state;
-    if(movieData.length === 0 || !movieData) {
+    if(!movieData || movieData.length === 0) {
       return <h3>No Movies Returned, Check Input, Refresh to Retry.</h3>
     }
     // sort searched movies by release_year desc
@@ -158,7 +170,7 @@ class SearchDB extends React.Component {
     }
     return (
       <React.Fragment>
-          <h2>Hello, My Movielens Challenge.</h2>
+          <h2 data-testid="app-title">Hello, My Movielens Challenge.</h2>
           <div style={divStyle}>
               <div>
                   <input type="text" className="filter-input" data-testid="term-id"
