@@ -136,7 +136,7 @@ class SearchDB extends React.Component {
   render() {
     const { movieData, currentPage } = this.state;
     if(movieData.length === 0 || !movieData) {
-      return <h3>No Movies Returned, Check Input.</h3>
+      return <h3>No Movies Returned, Check Input, Refresh to Retry.</h3>
     }
     // sort searched movies by release_year desc
     movieData.sort(function(a, b) {

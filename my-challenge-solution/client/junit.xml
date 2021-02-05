@@ -1,10 +1,12 @@
-<testsuites name="jest tests" tests="3" failures="0" time="0.742">
-  <testsuite name="true is truthy and false is falsy" errors="0" failures="0" skipped="0" timestamp="2021-02-05T13:07:42" time="0.742" tests="3">
-    <testcase classname="true is truthy and false is falsy true is truthy" name="true is truthy and false is falsy true is truthy" time="0.001">
+<testsuites name="jest tests" tests="4" failures="0" time="1.111">
+  <testsuite name="true is truthy and false is falsy" errors="0" failures="0" skipped="0" timestamp="2021-02-05T15:00:44" time="1.111" tests="4">
+    <testcase classname="true is truthy and false is falsy true is truthy" name="true is truthy and false is falsy true is truthy" time="0.003">
     </testcase>
-    <testcase classname="true is truthy and false is falsy false is falsy" name="true is truthy and false is falsy false is falsy" time="0">
+    <testcase classname="true is truthy and false is falsy false is falsy" name="true is truthy and false is falsy false is falsy" time="0.001">
     </testcase>
     <testcase classname="sum sums up two values" name="sum sums up two values" time="0">
+    </testcase>
+    <testcase classname="AppTest renders App component" name="AppTest renders App component" time="0.011">
     </testcase>
   </testsuite>
 </testsuites>

@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import AppTest from './AppTest';
 import Sum from './Sum';
-import { render, fireEvent, cleanup } from '@testing-library/react';
+import { render, fireEvent, cleanup, screen } from '@testing-library/react';
 
 import 'jest-dom/extend-expect';
 
@@ -17,10 +17,15 @@ describe('true is truthy and false is falsy', () => {
   });
 });
 
-
-
 describe('sum', () => {
   test('sums up two values', () => {
     expect(Sum(2, 4)).toBe(6);
+  });
+});
+
+describe('AppTest', () => {
+  test('renders App component', () => {
+    render(<AppTest />);
+    //screen.debug();
   });
 });
