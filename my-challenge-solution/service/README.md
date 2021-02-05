@@ -1,13 +1,19 @@
 ## Backend Setup and Process
 - The four data csv files are converted to sql(links.sql, movies.sql, rating.sql, tags.sql) file that will define the four tables as postgresql database table and seed data from the csv files into the database tables
   -- ```psql -d challenge -U root < ./movies.sql```
+
   -- ```psql -d challenge -U root < ./tags.sql```
+
   -- ```psql -d challenge -U root < ./ratings.sql```
+
   -- ```psql -d challenge -U root < ./links.sql```
+
   -- Type of columns were specifically given, and PRIMARY KEYS and FOREIGN KEYS are defined.
   -- The movie_id is PK for movies table and FK for the other three tables
   -- Database postgresql named "challenge" were created with owner "root" and password "testpass".
+
      ```create user root with password 'password' superuser; ```
+
      ```create database challenge with owner root; ```
 
 ## Flask App
@@ -36,12 +42,17 @@
 
 - For example, the output of the search json for movie_id=3000 on port 5000 are tested to work. ```http://localhost:5000/movies/3000```
   -- pipenv were were used to create isolated environment in service
+
   ``` pipenv install``` will install dependencies in the Pipfile
+
   ``` pipenv shell``` will activate the shell, then
+
   ``` flask run ``` will run the flask app
 
 ## Fronend React App
+
 - ```npm install``` will install dependencies
+
 - ```npm start``` will run the react app
 
 - key Ajax code that fetch flask endpoint json dataset can be seen as below:
