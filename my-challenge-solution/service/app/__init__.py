@@ -89,10 +89,10 @@ def get_tagged_movies(tag_content):
     return {'results': [film.to_dict() for film in results]}
 
 
-@app.route('/search/ratings/<limit>')
-def get_rated_movies(limit):
+@app.route('/search/ratings/<target>')
+def get_rated_movies(target):
     # obtain all ratings with value greater than limit
-    ratings = Rating.query.filter(Rating.rating >= float(limit)).all()
+    ratings = Rating.query.filter(Rating.rating == float(target)).all()
     response = [rating.movie_id for rating in ratings]
     all_movies = Movie.query.all()
     results = [film for film in all_movies if film.movie_id in response]

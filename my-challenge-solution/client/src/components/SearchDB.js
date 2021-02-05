@@ -13,7 +13,7 @@ class SearchDB extends React.Component {
       currentPage: 1,
       term: 'movie',
       tag_content: '',
-      rating_limit: 0,
+      rating_target: 0,
       user_id: 1,
     };
 
@@ -31,9 +31,9 @@ class SearchDB extends React.Component {
     })
   }
 
-  updateRatingLimit = (e) => {
+  updateRatingTarget = (e) => {
     this.setState({
-      rating_limit: e.target.value,
+      rating_target: e.target.value,
     })
   }
 
@@ -87,7 +87,7 @@ class SearchDB extends React.Component {
   }
 
   searchMoviesByRating = async () => {
-    const term = this.state.rating_limit;
+    const term = this.state.rating_target;
     const res = await fetch(`/search/ratings/${term}`)
     if (res.ok) {
         const { results } = await res.json();
@@ -166,7 +166,7 @@ class SearchDB extends React.Component {
                   <button onClick={(e) => {
                           e.preventDefault();
                           this.searchMovies();
-                      }}> Title, Genres, Movie_Id
+                      }}> Title |Genres |Movie_Id
                   </button>
               </div>
 
@@ -182,11 +182,11 @@ class SearchDB extends React.Component {
 
               <div>
                   <input type="text" className="filter-input" data-testid="ratingTerm-id"
-                      onChange={this.updateRatingLimit}/>
+                      onChange={this.updateRatingTarget}/>
                   <button onClick={(e) => {
                           e.preventDefault();
                           this.searchMoviesByRating();
-                      }}> Minimum Rating (float)
+                      }}> By Rating # (float)
                   </button>
               </div>
 
@@ -196,7 +196,7 @@ class SearchDB extends React.Component {
                   <button onClick={(e) => {
                           e.preventDefault();
                           this.searchMoviesByUserId();
-                      }}> Rated/Tagged User
+                      }}> Rated or Tagged User
                   </button>
               </div>
 
