@@ -75,7 +75,7 @@ def get_links():
 @app.route('/movies/<id>')
 def get_movie_from_id(id):
     movie = Movie.query.filter_by(movie_id=id).first()
-    return {'movie_by_id': movie.to_dict()}
+    return {'movie': movie.to_dict()}
 
 
 @app.route('/search/tags/<tag_content>')
