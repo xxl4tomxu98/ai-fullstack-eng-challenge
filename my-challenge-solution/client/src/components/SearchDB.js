@@ -114,8 +114,30 @@ class SearchDB extends React.Component {
     throw res;
   }
 
+  getMoviesTest = async () => {
+    // This term is from props in from App() for testing
+    const { term } = this.props;
+    const res = await fetch(`/search/${term}`)
+    if (res.ok) {
+        const { list } = await res.json();
+        console.log(list)
+        this.setState({
+          movieData: list,
+        })
+        return list;
+    }
+    throw res;
+  }
+
+  componentDidMount() {
+    this.getMoviesTest();
+  }
+
   render() {
     const { movieData, currentPage } = this.state;
+    if(movieData.length === 0 || !movieData) {
+      return <h3>No Movies Returned, Check Input.</h3>
+    }
     // sort searched movies by release_year desc
     movieData.sort(function(a, b) {
       const keyA = parseInt(a.release_year, 10);
