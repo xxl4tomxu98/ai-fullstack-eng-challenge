@@ -1,20 +1,22 @@
 ## Backend Setup and Process
-- The four data csv files are converted to sql(links.sql, movies.sql, rating.sql, tags.sql) file that will define the four tables as postgresql database table and seed data from the csv files into the database tables
-  -- ```psql -d challenge -U root < ./movies.sql```
+- The four data csv files are converted to sql database tables that will seed data from the csv files into the database tables
 
-  -- ```psql -d challenge -U root < ./tags.sql```
-
-  -- ```psql -d challenge -U root < ./ratings.sql```
-
-  -- ```psql -d challenge -U root < ./links.sql```
-
-  -- Type of columns were specifically given, and PRIMARY KEYS and FOREIGN KEYS are defined.
-  -- The movie_id is PK for movies table and FK for the other three tables
   -- Database postgresql named "challenge" were created with owner "root" and password "testpass".
 
      ```create user root with password 'password' superuser; ```
 
      ```create database challenge with owner root; ```
+
+  -- Within the service folder run
+
+     ```pipenv shell
+
+        python import_data.py
+     ```
+
+  -- Type of columns were specifically given, and PRIMARY KEYS and FOREIGN KEYS are defined.
+  -- The movie_id is PK for movies table and FK for the other three tables
+
 
 ## Flask App
 - Since the tables are relational even though only four are present, For the sake of better query backend Flask sever are built to connect to the database using database handler psycopg2-binary and ORM SqlAlchemy to help fetching data as needed.
