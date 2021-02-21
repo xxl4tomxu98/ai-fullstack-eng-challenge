@@ -116,4 +116,6 @@
 
 - The tests logic and methodology scheme were planned. Encountered a lot of network connection and other issues with jest and react test library. The search term seems to come in the App component, but test has not been able to return DOM elements based on the mock and render activities. Further research into this is needed.
 
-# Container based method were attmepted initially with some difficulty in importing data. But implemented raw SQL lines for querying on the movies successfully.
+# Container based solution
+
+- method were attmepted initially with some difficulty in importing data. But implemented raw SQL lines for querying on the movies successfully.

@@ -128,6 +128,7 @@ class Tag(db.Model):
             "timestamp": self.timestamp,
         }
 
+
 class Link(db.Model):
     __tablename__ = "links"
 
@@ -143,6 +144,7 @@ class Link(db.Model):
             "imdb_id": self.imdb_id,
             "tmdb_id": self.tmdb_id,
         }
+
 
 def decimal_default(obj):
     if isinstance(obj, decimal.Decimal):
