@@ -72,7 +72,7 @@ cur.execute("""
 
 with open('links.csv', 'r') as f:
     reader = csv.reader(f)
-    next(reader) # Skip the header row.
+    # next(reader) # Skip the header row.
     for row in reader:
         cur.copy_from(f, 'links', sep=',', null="",
                        columns=['movie_id', 'imdb_id',

@@ -82,31 +82,40 @@ def get_movie_from_id(id):
 def get_tagged_movies(tag_content):
     search_args = [col.ilike('%%%s%%' % tag_content) for col in
                     [Tag.tag]]
-    tags = Tag.query.filter(or_(*search_args)).all()
-    response = [tag.movie_id for tag in tags]
-    all_movies = Movie.query.all()
-    results = [film for film in all_movies if film.movie_id in response]
-    return {'results': [film.to_dict() for film in results]}
+    # tags = Tag.query.filter(or_(*search_args)).all()
+    # response = [tag.movie_id for tag in tags]
+    # all_movies = Movie.query.all()
+    # results = [film for film in all_movies if film.movie_id in response]
+    results = Movie.query.join(Tag)  \
+                         .filter(or_(*search_args)).all()
+    return {'list': [film.to_dict() for film in results]}
 
 
 @app.route('/search/ratings/<target>')
 def get_rated_movies(target):
     # obtain all ratings with value greater than limit
-    ratings = Rating.query.filter(Rating.rating == float(target)).all()
-    response = [rating.movie_id for rating in ratings]
-    all_movies = Movie.query.all()
-    results = [film for film in all_movies if film.movie_id in response]
-    return {'results': [film.to_dict() for film in results]}
+    # ratings = Rating.query.filter(Rating.rating == float(target)).all()
+    # response = [rating.movie_id for rating in ratings]
+    # all_movies = Movie.query.all()
+    # results = [film for film in all_movies if film.movie_id in response]
+    results = Movie.query.join(Rating)  \
+                         .filter(Rating.rating == float(target)).all()
+    return {'list': [film.to_dict() for film in results]}
 
 
 @app.route('/search/users/<int:id>')
 def get_user_rated_tagged_movies(id):
     # obtain indexes of user tags and ratings
-    user_rates = Rating.query.filter(Rating.user_id == id).all()
-    user_tags = Tag.query.filter(Tag.user_id == id).all()
+    # user_rates = Rating.query.filter(Rating.user_id == id).all()
+    # user_tags = Tag.query.filter(Tag.user_id == id).all()
     # sum all movie rated or tagged by user remove duplicates
-    response = {*[rating.movie_id for rating in user_rates],
-                  *[tag.movie_id for tag in user_tags] }
-    all_movies = Movie.query.all()
-    results = [film for film in all_movies if film.movie_id in response]
-    return {'results': [film.to_dict() for film in results]}
+    # response = {*[rating.movie_id for rating in user_rates],
+    #               *[tag.movie_id for tag in user_tags] }
+    # all_movies = Movie.query.all()
+    # results = [film for film in all_movies if film.movie_id in response]
+    rating_results = Movie.query.join(Rating)  \
+                         .filter(Rating.user_id == id).all()
+    tag_results = Movie.query.join(Tag)  \
+                         .filter(Tag.user_id == id).all()
+    results = {*rating_results, *tag_results}
+    return {'list': [film.to_dict() for film in results]}

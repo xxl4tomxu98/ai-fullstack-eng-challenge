@@ -19,29 +19,11 @@ class SearchDB extends React.Component {
 
   }
 
-  updateTerm = (e) => {
-    this.setState({
-      term: e.target.value,
-    })
+  onChange = (e) => {
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
   }
 
-  updateTagTerm = (e) => {
-    this.setState({
-      tag_content: e.target.value,
-    })
-  }
-
-  updateRatingTarget = (e) => {
-    this.setState({
-      rating_target: e.target.value,
-    })
-  }
-
-  updateUserId = (e) => {
-    this.setState({
-      user_id: e.target.value,
-    })
-  }
 
   handleClick = (e) => {
     this.setState({
@@ -49,18 +31,8 @@ class SearchDB extends React.Component {
     });
   }
 
-  // fetchMovies = async () => {
-  //   const response = await fetch('/movies');
-  //   const { list } = await response.json();
-  //   console.log(list)
-  //   this.setState({
-  //     movieData: list,
-  //   })
-  // }
-
-  searchMovies = async () => {
-    const term = this.state.term;
-    const res = await fetch(`/search/${term}`)
+  fetchMovies = async (url) => {
+    const res = await fetch(url);
     if (res.ok) {
         const { list } = await res.json();
         console.log(list)
@@ -72,32 +44,22 @@ class SearchDB extends React.Component {
     throw res;
   }
 
-  searchMoviesByTag = async () => {
-    const term = this.state.tag_content;
-    const res = await fetch(`/search/tags/${term}`)
-    if (res.ok) {
-        const { results } = await res.json();
-        console.log(results)
-        this.setState({
-          movieData: results,
-        })
-        return results;
-    }
-    throw res;
+  searchMovies = () => {
+    const { term } = this.state;
+    const url = `/search/${term}`;
+    this.fetchMovies(url);
+  }
+
+  searchMoviesByTag = () => {
+    const { tag_content }= this.state;
+    const url = `/search/tags/${tag_content}`;
+    this.fetchMovies(url);
   }
 
   searchMoviesByRating = async () => {
-    const term = this.state.rating_target;
-    const res = await fetch(`/search/ratings/${term}`)
-    if (res.ok) {
-        const { results } = await res.json();
-        console.log(results)
-        this.setState({
-          movieData: results,
-        })
-        return results;
-    }
-    throw res;
+    const { rating_target } = this.state;
+    const url = `/search/ratings/${rating_target}`;
+    this.fetchMovies(url);
   }
 
   searchMoviesByUserId = async () => {
@@ -135,15 +97,15 @@ class SearchDB extends React.Component {
       this.fetchMoviesTest(term);
   }
 
-  componentDidUpdate(oldProps) {
-      const oldTerm = oldProps.term;
-      const newTerm = this.props.term;
-      console.log(oldTerm, newTerm)
-      if (oldTerm === newTerm) {
-        return;
-      }
-      this.fetchMoviesTest(newTerm);
-  }
+//   componentDidUpdate(oldProps) {
+//       const oldTerm = oldProps.term;
+//       const newTerm = this.props.term;
+//       console.log(oldTerm, newTerm)
+//       if (oldTerm === newTerm) {
+//         return;
+//       }
+//       this.fetchMoviesTest(newTerm);
+//   }
 
   render() {
     const { movieData, currentPage } = this.state;
@@ -174,7 +136,7 @@ class SearchDB extends React.Component {
           <div style={divStyle}>
               <div>
                   <input type="text" className="filter-input" data-testid="term-id"
-                      onChange={this.updateTerm}/>
+                      name='term' onChange={this.onChange}/>
                   <button onClick={(e) => {
                           e.preventDefault();
                           this.searchMovies();
@@ -184,7 +146,7 @@ class SearchDB extends React.Component {
 
               <div>
                   <input type="text" className="filter-input" data-testid="tagTerm-id"
-                      onChange={this.updateTagTerm}/>
+                      name='tag_content' onChange={this.onChange}/>
                   <button onClick={(e) => {
                           e.preventDefault();
                           this.searchMoviesByTag();
@@ -194,7 +156,7 @@ class SearchDB extends React.Component {
 
               <div>
                   <input type="text" className="filter-input" data-testid="ratingTerm-id"
-                      onChange={this.updateRatingTarget}/>
+                      name='rating_target' onChange={this.onChange}/>
                   <button onClick={(e) => {
                           e.preventDefault();
                           this.searchMoviesByRating();
@@ -204,7 +166,7 @@ class SearchDB extends React.Component {
 
               <div>
                   <input type="text" className="filter-input" data-testid="userTerm-id"
-                      onChange={this.updateUserId}/>
+                      name='user_id' onChange={this.onChange}/>
                   <button onClick={(e) => {
                           e.preventDefault();
                           this.searchMoviesByUserId();
