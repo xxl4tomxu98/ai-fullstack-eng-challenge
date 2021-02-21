@@ -56,40 +56,23 @@ class SearchDB extends React.Component {
     this.fetchMovies(url);
   }
 
-  searchMoviesByRating = async () => {
+  searchMoviesByRating = () => {
     const { rating_target } = this.state;
     const url = `/search/ratings/${rating_target}`;
     this.fetchMovies(url);
   }
 
-  searchMoviesByUserId = async () => {
-    const term = this.state.user_id;
-    const res = await fetch(`/search/users/${term}`)
-    if (res.ok) {
-        const { results } = await res.json();
-        console.log(results)
-        this.setState({
-          movieData: results,
-        })
-        return results;
-    }
-    throw res;
+  searchMoviesByUserId = () => {
+    const { user_id } = this.state;
+    const url = `/search/users/${user_id}`;
+    this.fetchMovies(url);
   }
 
 
-
-  fetchMoviesTest = async (term) => {
+  fetchMoviesTest = (term) => {
       // This term is from props in from App() for testing
-      const res = await fetch(`/search/${term}`)
-      if (res.ok) {
-          const { list } = await res.json();
-          console.log(list)
-          this.setState({
-            movieData: list,
-          })
-          return list;
-      }
-      throw res;
+      const url = `/search/${term}`;
+      this.fetchMovies(url);
   }
 
   componentDidMount() {
