@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from .models import db, Movie, Tag, Rating, Link, MyJSONEncoder
 from os import environ
-from sqlalchemy import or_, String
+from sqlalchemy import or_, String, Integer, desc
 from sqlalchemy.sql.expression import cast
 
 # use config class to connect sqlAlchemy to postgresql database
@@ -33,41 +33,54 @@ def react_root(path):
 # movies based on match on title, genres, or movie_id(return one)
 @app.route('/search/<term>')
 def search(term):
+    #This one is if search term is input from page searchbar
     #key = request.get_json()["term"]
-    # search if term in title or genres of movies
+    # This pagination page is from url '/search/term?page=1'
+    page = request.args.get('page', 1, type=int)
     search_args = [col.ilike('%%%s%%' % term) for col in
                    [Movie.title, Movie.genres, cast(Movie.movie_id, String)]]
-    movies = Movie.query.filter(or_(*search_args)).all()
 
-    return {'list': [movie.to_dict() for movie in movies]}
+    movies = Movie.query.filter(or_(*search_args)) \
+                        .order_by(Movie.release_year.desc()) \
+                        .paginate(page=page, per_page=5, error_out=True)
+
+    return {'list': [movie.to_dict() for movie in movies.items],
+            'pages': [page for page in movies.iter_pages()]}
 
 
 @app.route('/movies')
 def get_movies():
     page = request.args.get('page', 1, type=int)
-    response = Movie.query.paginate(page=page, per_page=5, error_out=True)
-    return {'list': [film.to_dict() for film in response.items]}
+    response = Movie.query.order_by(Movie.release_year.desc()) \
+                          .paginate(page=page, per_page=5, error_out=True)
+    return {'list': [film.to_dict() for film in response.items],
+            'pages': [page for page in response.iter_pages()]}
 
 
 @app.route('/tags')
 def get_tags():
     page = request.args.get('page', 1, type=int)
-    response = Tag.query.paginate(page=page, per_page=5, error_out=True)
-    return {'list': [tag.to_dict() for tag in response.items]}
+    response = Tag.query.join(Movie) \
+                        .order_by(Movie.release_year.desc()) \
+                        .paginate(page=page, per_page=5, error_out=True)
+    return {'list': [tag.to_dict() for tag in response.items],
+            'pages': [page for page in response.iter_pages()]}
 
 
 @app.route('/ratings')
 def get_ratings():
     page = request.args.get('page', 1, type=int)
     response = Rating.query.paginate(page=page, per_page=5, error_out=True)
-    return {'list': [rate.to_dict() for rate in response.items]}
+    return {'list': [rate.to_dict() for rate in response.items],
+            'pages': [page for page in response.iter_pages()]}
 
 
 @app.route('/links')
 def get_links():
     page = request.args.get('page', 1, type=int)
     response = Link.query.paginate(page=page, per_page=5, error_out=True)
-    return {'list': [link.to_dict() for link in response.items]}
+    return {'list': [link.to_dict() for link in response.items],
+            'pages': [page for page in response.iter_pages()]}
 
 
 @app.route('/movies/<id>')
@@ -78,6 +91,7 @@ def get_movie_from_id(id):
 
 @app.route('/search/tags/<tag_content>')
 def get_tagged_movies(tag_content):
+    page = request.args.get('page', 1, type=int)
     search_args = [col.ilike('%%%s%%' % tag_content) for col in
                     [Tag.tag]]
     # tags = Tag.query.filter(or_(*search_args)).all()
@@ -85,8 +99,11 @@ def get_tagged_movies(tag_content):
     # all_movies = Movie.query.all()
     # results = [film for film in all_movies if film.movie_id in response]
     results = Movie.query.join(Tag)  \
-                         .filter(or_(*search_args)).all()
-    return {'list': [film.to_dict() for film in results]}
+                         .filter(or_(*search_args)) \
+                         .order_by(Movie.release_year.desc()) \
+                         .paginate(page=page, per_page=5, error_out=True)
+    return {'list': [film.to_dict() for film in results.items],
+            'pages': [page for page in results.iter_pages()]}
 
 
 @app.route('/search/ratings/<target>')
@@ -96,9 +113,13 @@ def get_rated_movies(target):
     # response = [rating.movie_id for rating in ratings]
     # all_movies = Movie.query.all()
     # results = [film for film in all_movies if film.movie_id in response]
+    page = request.args.get('page', 1, type=int)
     results = Movie.query.join(Rating)  \
-                         .filter(Rating.rating == float(target)).all()
-    return {'list': [film.to_dict() for film in results]}
+                         .filter(Rating.rating == float(target)) \
+                         .order_by(Movie.release_year.desc()) \
+                         .paginate(page=page, per_page=5, error_out=True)
+    return {'list': [film.to_dict() for film in results.items],
+            'pages': [page for page in results.iter_pages()]}
 
 
 @app.route('/search/users/<int:id>')
@@ -111,9 +132,14 @@ def get_user_rated_tagged_movies(id):
     #               *[tag.movie_id for tag in user_tags] }
     # all_movies = Movie.query.all()
     # results = [film for film in all_movies if film.movie_id in response]
-    rating_results = Movie.query.join(Rating)  \
-                         .filter(Rating.user_id == id).all()
-    tag_results = Movie.query.join(Tag)  \
-                         .filter(Tag.user_id == id).all()
-    results = {*rating_results, *tag_results}
-    return {'list': [film.to_dict() for film in results]}
+    page = request.args.get('page', 1, type=int)
+    # rating_results = Movie.query.join(Rating)  \
+    #                      .filter(Rating.user_id == id).all()
+    # tag_results = Movie.query.join(Tag)  \
+    #                      .filter(Tag.user_id == id).all()
+    # results = {*rating_results, *tag_results}
+    results = Movie.query.join(Rating).filter(Rating.user_id == id) \
+                         .order_by(Movie.release_year.desc()) \
+                         .paginate(page=page, per_page=5, error_out=True)
+    return {'list': [film.to_dict() for film in results.items],
+            'pages': [page for page in results.iter_pages()]}

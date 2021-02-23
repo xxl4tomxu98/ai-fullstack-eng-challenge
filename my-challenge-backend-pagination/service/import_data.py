@@ -14,6 +14,8 @@ with open('movies.csv', 'r') as f:
     reader = csv.reader(f)
     next(reader) # Skip the header row.
     for row in reader:
+        # cur.copy_expert(
+        # "COPY movies FROM STDIN WITH CSV DELIMITER E'\t' QUOTE E'\b' NULL AS '';",
         cur.execute(
         "INSERT INTO movies VALUES (%s, %s, %s)",
         row

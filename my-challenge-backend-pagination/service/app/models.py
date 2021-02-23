@@ -1,4 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.sql.expression import cast, func
+from sqlalchemy import Integer
 import flask.json, decimal
 db = SQLAlchemy()
 
@@ -47,9 +50,17 @@ class Movie(db.Model):
             return [self.genres]
         return self.genres.split('|')
 
-    @property
+    @hybrid_property
     def release_year(self):
-        return self.title[-5:-1]
+        if not self.title[-5:-1].isdigit():
+            return int('0000')
+        return int(self.title[-5:-1])
+
+    @release_year.expression
+    def release_year(cls):
+        if func.isnumeric(func.substr(cls.title, -5, 4)) != 1:
+            return cast('0000', Integer)
+        return cast(func.substr(cls.title, -5, 4), Integer)
 
     @property
     def avg_rating(self):

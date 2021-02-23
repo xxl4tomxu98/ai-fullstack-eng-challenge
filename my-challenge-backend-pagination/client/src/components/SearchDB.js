@@ -11,6 +11,7 @@ class SearchDB extends React.Component {
     this.state = {
       movieData: [],
       currentPage: 1,
+      totalPages: 0,
       term: 'movie',
       tag_content: '',
       rating_target: 0,
@@ -34,44 +35,46 @@ class SearchDB extends React.Component {
   fetchMovies = async (url) => {
     const res = await fetch(url);
     if (res.ok) {
-        const { list } = await res.json();
-        console.log(list)
+        const { list, pages } = await res.json();
+        console.log(list, pages);
         this.setState({
           movieData: list,
+          totalPages: pages,
         })
-        return list;
+        return (list, pages);
     }
     throw res;
   }
 
   searchMovies = () => {
-    const { term } = this.state;
-    const url = `/search/${term}`;
+    const { term, currentPage } = this.state;
+    const url = `/search/${term}?page=${currentPage}`;
     this.fetchMovies(url);
   }
 
   searchMoviesByTag = () => {
-    const { tag_content }= this.state;
-    const url = `/search/tags/${tag_content}`;
+    const { tag_content, currentPage }= this.state;
+    const url = `/search/tags/${tag_content}?page=${currentPage}`;
     this.fetchMovies(url);
   }
 
   searchMoviesByRating = () => {
-    const { rating_target } = this.state;
-    const url = `/search/ratings/${rating_target}`;
+    const { rating_target, currentPage } = this.state;
+    const url = `/search/ratings/${rating_target}?page=${currentPage}`;
     this.fetchMovies(url);
   }
 
   searchMoviesByUserId = () => {
-    const { user_id } = this.state;
-    const url = `/search/users/${user_id}`;
+    const { user_id, currentPage } = this.state;
+    const url = `/search/users/${user_id}?page=${currentPage}`;
     this.fetchMovies(url);
   }
 
 
   fetchMoviesTest = (term) => {
       // This term is from props in from App() for testing
-      const url = `/search/${term}`;
+      const { currentPage } = this.state;
+      const url = `/search/${term}?page=${currentPage}`;
       this.fetchMovies(url);
   }
 
@@ -81,8 +84,18 @@ class SearchDB extends React.Component {
   }
 
 
+//   componentDidUpdate(oldProps) {
+//       const prevPage = oldProps.currentPage;
+//       const newPage = this.state.currentPage;
+//       console.log(prevPage, newPage);
+//       if (prevPage === newPage) {
+//           return;
+//       }
+//       this.fetchMoviesTest(newTerm);
+//   }
+
   render() {
-    const { movieData } = this.state;
+    const { movieData, totalPages } = this.state;
     if(!movieData || movieData.length === 0) {
       return <h3>No Movies Returned, Check Input, Refresh to Retry.</h3>
     }
@@ -94,7 +107,7 @@ class SearchDB extends React.Component {
           <div style={divStyle}>
               <div>
                   <input type="text" className="filter-input" data-testid="term-id"
-                      name='term' onChange={this.onChange}/>
+                      name='term' value={this.state.term} onChange={this.onChange}/>
                   <button onClick={(e) => {
                           e.preventDefault();
                           this.searchMovies();
@@ -104,7 +117,7 @@ class SearchDB extends React.Component {
 
               <div>
                   <input type="text" className="filter-input" data-testid="tagTerm-id"
-                      name='tag_content' onChange={this.onChange}/>
+                      name='tag_content' value={this.state.tag_content} onChange={this.onChange}/>
                   <button onClick={(e) => {
                           e.preventDefault();
                           this.searchMoviesByTag();
@@ -114,7 +127,7 @@ class SearchDB extends React.Component {
 
               <div>
                   <input type="text" className="filter-input" data-testid="ratingTerm-id"
-                      name='rating_target' onChange={this.onChange}/>
+                      name='rating_target' value={this.state.rating_target} onChange={this.onChange}/>
                   <button onClick={(e) => {
                           e.preventDefault();
                           this.searchMoviesByRating();
@@ -124,7 +137,7 @@ class SearchDB extends React.Component {
 
               <div>
                   <input type="text" className="filter-input" data-testid="userTerm-id"
-                      name='user_id' onChange={this.onChange}/>
+                      name='user_id' value={this.state.user_id} onChange={this.onChange}/>
                   <button onClick={(e) => {
                           e.preventDefault();
                           this.searchMoviesByUserId();
@@ -133,13 +146,13 @@ class SearchDB extends React.Component {
               </div>
           </div>
           <br/>
-          {/* <div className="pagination">
-              {pageNumbers.fill().map((number, index) =>   {
+          <div className="pagination">
+              {totalPages.fill().map((number, index) =>   {
                 return (
                   <button data-testid="page-button" key={"page-button-" + index} onClick={this.handleClick}>{index+1}</button>
                 )
               })}
-          </div> */}
+          </div>
 
           <ul className="results">
               {movieData.map((movie, index) => {
