@@ -7,10 +7,10 @@ import registerServiceWorker from './registerServiceWorker';
 
 //const term = "3000";
 
-try {
-    ReactDOM.render(<App />, document.getElementById('root'));
-}
-catch(error) {
-    console.error('Unknown error intercepted. error: ', error);
-}
+ReactDOM.render(
+    <React.StrictMode>
+        <App />
+    </React.StrictMode>,
+    document.getElementById('root')
+);
 registerServiceWorker();

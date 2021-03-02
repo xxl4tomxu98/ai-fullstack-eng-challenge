@@ -54,16 +54,18 @@ const SearchKeywords = () => {
                   <button onClick={(e) => {
                           e.preventDefault();
                           fetchMovies(1);
-                      }}> Title |Genres |Movie_Id
+                      }}> Title | Genres | Movie_Id
                   </button>
               </div>
           </div>
           <br/>
           <div className="pagination">
-              {totalPages.fill().map((number, index) =>   {
-                return (
-                  <button data-testid="page-button" key={"page-button-" + index} onClick={handleClick}>{index+1}</button>
-                )
+              {totalPages.map((number, index) =>   {
+                  return ( number===null ?
+                    <button data-testid="page-button" key={"page-button-" + index}>...</button>
+                   :
+                    <button data-testid="page-button" key={"page-button-" + index} onClick={handleClick}>{`${number}`}</button>
+                  )
               })}
           </div>
 

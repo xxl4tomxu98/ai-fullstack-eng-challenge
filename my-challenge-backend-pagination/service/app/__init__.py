@@ -43,9 +43,10 @@ def search(term):
     movies = Movie.query.filter(or_(*search_args)) \
                         .order_by(Movie.release_year.desc()) \
                         .paginate(page=page, per_page=5, error_out=True)
-
-    return {'list': [movie.to_dict() for movie in movies.items],
-            'pages': [page for page in movies.iter_pages()]}
+    pages = [page for page in movies.iter_pages()]
+    # print(pages)
+    return jsonify({'list': [movie.to_dict() for movie in movies.items],
+            'pages': pages})
 
 
 @app.route('/movies')
