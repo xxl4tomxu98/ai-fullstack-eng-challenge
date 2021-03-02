@@ -1,5 +1,5 @@
 {
-  "name": "benchmarking_engineers",
+  "name": "backend-paginated-query-movielens",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,8 +8,8 @@
     "fetch-mock": "^9.11.0",
     "jest-dom": "^3.5.0",
     "prop-types": "^15.6.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "react-scripts": "1.0.17",
     "save": "^2.3.1",
     "xmlhttprequest": "^1.8.0"

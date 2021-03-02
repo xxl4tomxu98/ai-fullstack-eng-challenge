@@ -5,9 +5,12 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
 
-const term = "3000";
+//const term = "3000";
 
-ReactDOM.render(
-    <App term = {term}/>
-    , document.getElementById('root'));
+try {
+    ReactDOM.render(<App />, document.getElementById('root'));
+}
+catch(error) {
+    console.error('Unknown error intercepted. error: ', error);
+}
 registerServiceWorker();

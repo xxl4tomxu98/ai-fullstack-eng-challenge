@@ -1,16 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './App.css';
-import SearchDB from './components/SearchDB';
+import SearchKeywords from './components/SearchKeywords';
 
-class App extends Component {
-  render() {
-    const { term } = this.props;
+const App = () => {
     return (
-      <div className="App">
-          <SearchDB term={term}/>
-      </div>
+        <div className="App">
+            <SearchKeywords />
+        </div>
     );
-  }
 }
 
 export default App;
