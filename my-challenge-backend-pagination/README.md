@@ -1,3 +1,5 @@
+# This solution uses backend flask paginated items and pages for react rendering.
+
 ## Backend Setup and Process
 - The four data csv files are converted to sql database tables that will seed data from the csv files into the database tables
 
@@ -47,6 +49,8 @@
 
 - Searches on movies based on movies column names, or tag, rating, and user filters are all tested successfully in the backend.
 
+- Pagination is carried out in Flask app init.py where paginate() object exports result.items and iter_pages() where total pages can be exported to the front. The advantage of backend pagination is obviously better scale with large dataset and a lot of searched items with faster response and UX.
+
 - For example, the output of the search json for movie_id=3000 on port 5000 are tested to work. ```http://localhost:5000/movies/3000```
 
   -- pipenv were were used to create isolated environment in service
@@ -90,7 +94,7 @@
 
   -- search of movies based on whether a certain user_id has rated or tagged the movies. Input shall be user_id and rows in tags and ratings tables were searched to get all possible movies and eliminte duplicates.
 
-- Paginations are designed in component "SearchDB.js" so that buttons of all possible pages are listed in the page and each page contains 3 movies due to limitations on space each page. The data were sorted starting most recent released movies first and going back in years.
+- Paginations are designed in all search components so that buttons of all possible pages are listed in the page and each page contains 5 movies due to limitations on space each page. The data were sorted starting most recent released movies first and going back in years. The paginated items and pages are all sent from backend Flask paginate() object.
 
 - Each movie rendering contains movie_id, title with links to movielens url, and links to other two database urls, imdb and tmdb.
 

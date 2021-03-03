@@ -45,8 +45,8 @@ def search(term):
                         .paginate(page=page, per_page=5, error_out=True)
     pages = [page for page in movies.iter_pages()]
     # print(pages)
-    return jsonify({'list': [movie.to_dict() for movie in movies.items],
-            'pages': pages})
+    return {'list': [movie.to_dict() for movie in movies.items],
+            'pages': pages}
 
 
 @app.route('/movies')

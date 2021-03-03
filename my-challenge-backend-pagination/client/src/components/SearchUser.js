@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const divStyle = {
     display: 'flex',
     alignItems: 'center'
 };
 
-const SearchKeywords = () => {
+const SearchUser = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [movieData, setMovieData] = useState([]);
-    const [term, setTerm] = useState('movie');
+    const [userId, setUserId] = useState(1);
 
-    const link = `/search/${term}?page=`;
+    const link = `/search/users/${userId}?page=`;
 
     const onChange = (e) => {
         const { value } = e.target;
-        setTerm(value);
+        setUserId(value);
     }
 
 
@@ -49,13 +50,16 @@ const SearchKeywords = () => {
           <h2 data-testid="app-title">Hello, My Movielens Challenge.</h2>
           <div style={divStyle}>
               <div>
-                  <input type="text" className="filter-input" data-testid="term-id"
-                      name='term' value={term} onChange={onChange}/>
+                  <input type="text" className="filter-input" data-testid="userTerm-id"
+                      name='userId' value={userId} onChange={onChange}/>
                   <button onClick={(e) => {
                           e.preventDefault();
                           fetchMovies(1);
-                      }}> Title | Genres | Movie_Id
+                      }}> Rated or Tagged User
                   </button>
+                  <Link to='/'>
+                      <button type='button' className='s-btn s-btn__filled' style={{paddingLeft: '8px'}}>Return to HomePage</button>
+                  </Link>
               </div>
           </div>
           <br/>
@@ -85,4 +89,4 @@ const SearchKeywords = () => {
     );
 }
 
-export default SearchKeywords;
+export default SearchUser;
